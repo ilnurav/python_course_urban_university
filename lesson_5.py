@@ -9,7 +9,3 @@ mutable_list[1] = 4.7
 mutable_list[2] = 'world'
 mutable_list[3] = False
 print('Mutable list:', mutable_list)
-
-
-
-
