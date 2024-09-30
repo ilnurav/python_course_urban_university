@@ -15,12 +15,3 @@ my_set.add(True)
 my_set.add((9, 7.4, 10))
 my_set.remove(3)
 print('Modified set:', my_set)
-
-
-
-
-
-
-
-
-
