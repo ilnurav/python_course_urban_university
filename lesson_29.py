@@ -1,8 +1,10 @@
+# Дополнительное практическое задание по модулю: "Наследование классов."
+
 import math
 
 class Figure:
+    sides_count = 0
     def __init__(self, color, *sides):
-        self.sides_count = 0
         self.filled = False
         self.__color = list(color)
         self.__sides = self.__validate_sides(sides)
@@ -24,7 +26,9 @@ class Figure:
         return self.__color
 
     def __is_valid_sides(self, *new_sides):
-        return len(new_sides) == self.sides_count and all(isinstance(side, int) and side > 0 for side in new_sides)
+        return (len(new_sides) == len(self.__sides)
+                and all(isinstance(side, int)
+                        and side > 0 for side in new_sides))
 
     def set_sides(self, *new_sides):
         if self.__is_valid_sides(*new_sides):
@@ -38,47 +42,52 @@ class Figure:
 
 
 class Circle(Figure):
-    def __init__(self, color, *sides):
-        self.sides_count = 1
-        super().__init__(color, *sides)
-        self.__radius = self.__calculate_radius()
+    sides_count = 1
 
-    def __calculate_radius(self):
-        sides = self.get_sides()
-        if not sides:  # Проверка на пустой список сторон
-            return 1  # Если сторон нет, радиус по умолчанию 1
-        return sides[0] / (2 * math.pi)
+    def __init__(self, color, *sides):
+        super().__init__(color, *sides)
+        if len(sides) == self.sides_count:
+            self.__radius = sides[0]
+        else:
+            self.__radius = [1]
 
     def get_square(self):
-        return math.pi * self.__radius ** 2
+        return math.pi * self.__radius[0] ** 2
+
 
 
 class Triangle(Figure):
+    sides_count = 3
+
     def __init__(self, color, *sides):
-        self.sides_count = 3
         super().__init__(color, *sides)
+        if len(sides) == self.sides_count:
+            self.__sides = sides
+        else:
+            self.__sides = [1] * self.sides_count
 
     def get_square(self):
-        a, b, c = self.get_sides()
+        sides = self.get_sides()
+        a, b, c = sides[0], sides[1], sides[2]
         p = (a + b + c) / 2
         return math.sqrt(p * (p - a) * (p - b) * (p - c))
 
 
 class Cube(Figure):
-    def __init__(self, color, *sides):
-        self.sides_count = 12
-        super().__init__(color, *sides)
-        self.__sides = self.__validate_sides(sides)
+    sides_count = 12
 
-    def __validate_sides(self, sides):
+    def __init__(self, color, *sides):
+        super().__init__(color, *sides)
         if len(sides) == 1:
-            return [sides[0]] * self.sides_count
-        return [1] * self.sides_count
+            self.__sides = [sides[0]] * self.sides_count
+        else:
+            self.__sides = [1] * self.sides_count
+
+    def get_sides(self):
+        return self.__sides
 
     def get_volume(self):
         sides = self.get_sides()
-        if not sides:  # Проверка на пустой список сторон
-            return 1  # Если сторон нет, объем по умолчанию 1
         return sides[0] ** 3
 
 circle1 = Circle((200, 200, 100), 10) # (Цвет, стороны)
@@ -86,18 +95,18 @@ cube1 = Cube((222, 35, 130), 6)
 
 # Проверка на изменение цветов:
 circle1.set_color(55, 66, 77) # Изменится
-print(circle1.get_color())
+print(circle1.get_color()) # [55, 66, 77]
 cube1.set_color(300, 70, 15) # Не изменится
-print(cube1.get_color())
+print(cube1.get_color()) # [222, 35, 130]
 
 # Проверка на изменение сторон:
 cube1.set_sides(5, 3, 12, 4, 5) # Не изменится
-print(cube1.get_sides())
+print(cube1.get_sides()) # [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6]
 circle1.set_sides(15) # Изменится
-print(circle1.get_sides())
+print(circle1.get_sides()) # [15]
 
 # Проверка периметра (круга), это и есть длина:
-print(len(circle1))
+print(len(circle1)) # 15
 
 # Проверка объёма (куба):
-print(cube1.get_volume())
+print(cube1.get_volume()) # 216
