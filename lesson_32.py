@@ -8,13 +8,13 @@ class WordsFinder:
 
     def get_all_words(self):
         all_words = {}
-        punctuation = r"[',.=!?;:\s-\s]"
+        punctuation = r"[^\w\s']|_"
 
         for file_name in self.file_names:
             with open(file_name, 'r', encoding='utf-8') as file:
                 text = file.read().lower()
-                text = re.sub(punctuation, ' ', text)  # Удаление пунктуации и замена на пробелы
-                words = text.split()  # Разделение текста на слова
+                text = re.sub(punctuation, ' ', text)  #
+                words = text.split()
                 all_words[file_name] = words
 
         return all_words
@@ -26,7 +26,7 @@ class WordsFinder:
 
         for file_name, words in all_words.items():
             if word in words:
-                result[file_name] = words.index(word)
+                result[file_name] = words.index(word) + 1
 
         return result
 
@@ -41,8 +41,18 @@ class WordsFinder:
         return result
 
 
-# Пример использования
-finder2 = WordsFinder('test_file.txt')
-print(finder2.get_all_words())  # Все слова
-print(finder2.find('TEXT'))     # 3 слово по счёту
-print(finder2.count('teXT'))    # 4 слова teXT в тексте всего
+def create_test_file():
+    text = """It's a text for task Найти везде,
+Используйте его для самопроверки.
+Успехов в решении задачи!
+text text text"""
+    with open('test_file.txt', 'w', encoding='utf-8') as file:
+        file.write(text)
+
+
+if __name__ == "__main__":
+    create_test_file()
+    finder2 = WordsFinder('test_file.txt')
+    print(finder2.get_all_words())
+    print(finder2.find('TEXT'))
+    print(finder2.count('teXT'))
