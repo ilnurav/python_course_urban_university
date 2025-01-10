@@ -1,11 +1,11 @@
 # Домашнее задание по теме "Создание функций на лету"
 
-#Lambda-функция:
+# lambda-функция:
 first = 'Мама мыла раму'
 second = 'Рамена мало было'
 print(list(map(lambda x, y: x == y, first, second)))
 
-# Замыкание
+# замыкание
 def get_advanced_writer(file_name):
     def write_everything(*data_set):
         with open(file_name, 'w', encoding='utf-8') as f:
@@ -16,7 +16,7 @@ def get_advanced_writer(file_name):
 write = get_advanced_writer('example.txt')
 write('Это строчка', ['А', 'это', 'уже', 'число', 5, 'в', 'списке'])
 
-# Метод __call__:
+# метод __call__:
 from random import choice
 
 class MysticBall:
